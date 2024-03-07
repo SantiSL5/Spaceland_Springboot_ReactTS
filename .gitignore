@@ -1,0 +1,13 @@
+**/applicationproperties
+/data
+**/.env.local
+**/.env.local.php
+**/.env.*.local
+**/.env
+**/public/bundles
+**/var
+**/vendor
+**/node_modules
+**secret.ts
+**/springboot_m2
+**/old

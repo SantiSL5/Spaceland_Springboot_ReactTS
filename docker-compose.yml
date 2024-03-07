@@ -1,0 +1,76 @@
+version: '3.3'
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_spaceland
+    environment:
+      MYSQL_DATABASE: $MYSQL_DATABASE
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASSWORD
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+    ports:
+      - "3306:3306"
+    networks:
+      - spaceland-network
+    volumes:
+      - ./data/db:/var/lib/mysql
+    healthcheck:
+      test: mysqladmin ping -h localhost -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 2s
+
+  backend:
+    container_name: backend_spaceland
+    build:
+      context: ./build
+      target: springboot
+      args:
+        UID: ${UID}
+    restart: on-failure
+    env_file: ./.env
+    # environment:
+    #   SPRING_APPLICATION_JSON: '{
+    #     "spring.datasource.url"  : "jdbc:mysql://mysql:3306/$MYSQL_DATABASE?useSSL=false",
+    #     "spring.datasource.username" : "$MYSQL_USER",
+    #     "spring.datasource.password" : "$MYSQL_ROOT_PASSWORD",
+    #     "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL5InnoDBDialect",
+    #     "spring.jpa.hibernate.ddl-auto" : "update",
+    #     "spring.app.jwtSecret" : "$SECRET"},'
+    working_dir: /springboot
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./backend/springboot:/springboot
+      - ./backend/springboot_m2:/root/.m2
+    networks:
+      - spaceland-network
+    ports:
+      - 4000:4000
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./build
+      target: react
+      args:
+        UID: ${UID}
+    container_name: frontend_spaceland
+    command: npm run start
+    depends_on:
+      # backend:
+      #   condition: service_started
+      mysql:
+        condition: service_healthy
+    volumes:
+      - ./frontend/:/var/www
+    ports:
+      - "3000:3000"
+    networks:
+      - spaceland-network
+
+networks:
+  spaceland-network:
