@@ -1,4 +1,4 @@
-**/applicationproperties
+**application.properties
 /data
 **/.env.local
 **/.env.local.php
@@ -11,3 +11,5 @@
 **secret.ts
 **/springboot_m2
 **/old
+**.idea
+**.mvn
