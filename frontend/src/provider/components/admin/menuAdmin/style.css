@@ -1,0 +1,11 @@
+.menuAdmin {
+    background-color: #FFF;
+    border-radius: 15px;
+    margin-top: 20px;
+}
+
+.menuAdmin a {
+    cursor: pointer;
+    border-radius: 10px;
+    text-align: center;
+}

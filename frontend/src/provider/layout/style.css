@@ -1,0 +1,41 @@
+.about div {
+    background-color: lightgreen;
+}
+
+.active {
+    background-color: #a37dd1 !important;
+    color: white !important;
+}
+
+.inactive:hover {
+    background-color: #a37dd1;
+    color: white !important;
+}
+
+.inactive:active {
+    background-color: #6d1a9a;
+}
+
+
+html {
+    background-color: #F1F1F1;
+}
+
+.footer {
+    background-color: #F1F1F1;
+}
+
+.cross-img {
+    cursor: pointer;
+}
+
+/* body {
+    text-align: center;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    min-height: 100vh;
+} */
+
+/* footer {
+    min-height: 20vh;
+} */
