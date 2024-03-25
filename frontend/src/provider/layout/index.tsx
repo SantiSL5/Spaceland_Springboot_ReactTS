@@ -9,7 +9,7 @@ const Layout = (props: any) => {
             flexFlow: "column",
             backgroundColor: "#F1F1F1"
         }}>
-            <Header title="Spacecraft"></Header>
+            <Header title="Spaceland"></Header>
             {props.children}
             <Footer title="A"></Footer>
         </div>

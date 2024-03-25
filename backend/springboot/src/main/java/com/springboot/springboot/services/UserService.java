@@ -1,15 +1,20 @@
 package com.springboot.springboot.services;
 
 import com.google.gson.Gson;
+import com.springboot.springboot.model.BlacklistToken;
 import com.springboot.springboot.model.User;
 import com.springboot.springboot.model.UserAndToken;
+import com.springboot.springboot.repository.BlacklistTokenRepository;
 import com.springboot.springboot.repository.UserRepository;
 import com.springboot.springboot.requests.user.login.LoginRequest;
+import com.springboot.springboot.requests.user.login.LogoutRequest;
 import com.springboot.springboot.requests.user.login.RegisterRequest;
 import com.springboot.springboot.security.jwt.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,6 +39,9 @@ public class UserService {
     private JwtUtils jwtUtils;
 
     @Autowired
+    private BlacklistTokenRepository BlacklistTokenRepository;
+
+    @Autowired
     UserRepository userRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(UserService.class);
@@ -52,8 +60,28 @@ public class UserService {
         }
     }
 
-    public void register(RegisterRequest registerUser) throws Exception {
+    public ResponseEntity profile() {
         try {
+            User user = token_user();
+            if (user == null) return ResponseEntity.notFound().build();
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    public ResponseEntity register(RegisterRequest registerUser) {
+        try {
+            if (userRepository.existsByUsername(registerUser.getUsername()) > 0 && userRepository.existsByEmail(registerUser.getEmail()) > 0 ) {
+                return new ResponseEntity<>("Email and username already taked", HttpStatus.CONFLICT);
+            }
+            if (userRepository.existsByUsername(registerUser.getUsername()) > 0) {
+                return new ResponseEntity<>("Username already taked", HttpStatus.CONFLICT);
+            }
+            if (userRepository.existsByEmail(registerUser.getEmail()) > 0) {
+                return new ResponseEntity<>("Email already taked", HttpStatus.CONFLICT);
+            }
+
             User user = new User();
             user.setEmail(registerUser.getEmail());
             user.setUsername(registerUser.getUsername());
@@ -64,35 +92,42 @@ public class UserService {
             user.setCreated_at(new Timestamp(System.currentTimeMillis()));
             user.setUpdated_at(new Timestamp(System.currentTimeMillis()));
             userRepository.save(user);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            return new ResponseEntity<> (HttpStatus.BAD_REQUEST);
         }
     }
 
-    public UserAndToken login(User user, LoginRequest loginUser) throws Exception {
+    public ResponseEntity login(LoginRequest loginUser) {
         try {
+            if (userRepository.existsByEmail(loginUser.getEmail()) == 0) {
+                return new ResponseEntity<>("Email not found", HttpStatus.NOT_FOUND);
+            }
+            User user = userRepository.findByEmail(loginUser.getEmail()).get();
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(user.getUsername(), loginUser.getPassword())
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), loginUser.getPassword())
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtUtils.generateJwtToken(authentication);
-            return new UserAndToken(jwt, user);
+            return new ResponseEntity<>(new UserAndToken(user, jwt), HttpStatus.OK);
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            return new ResponseEntity<>("Wrong password", HttpStatus.CONFLICT);
         }
     }
 
-    public User getUser(String id) throws Exception {
+    public ResponseEntity logoutUser(LogoutRequest logoutRequest) {
         try {
-            return getUser(Long.parseLong(id));
+            String token = logoutRequest.getToken();
+
+            if (BlacklistTokenRepository.TokenExist(token) == 0) {
+                BlacklistToken blacklistToken = new BlacklistToken();
+                blacklistToken.setToken(token);
+                BlacklistTokenRepository.save(blacklistToken);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+
         } catch (Exception e) {
-            throw new Exception(e.getMessage());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    public User getUser(Long id) {
-        Optional<User> optional = userRepository.findById(id);
-        return optional.isPresent() ? optional.get() : null;
-    }
-
 }

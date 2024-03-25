@@ -17,24 +17,23 @@ const Login = () => {
     // }
     return (
         <div className="container dflex justify-content-center text-center mt-5 bg-white pb-5 pt-5">
-            <div className="continer">
+            <div className="continer justify-content-center">
                 {op === "register" ? 
-                    <div>
-                        <button type="submit" className="menu-sel border-menu col-3">Register</button> 
-                        <button type="submit" className="menu-notsel border-menu col-3" onClick={() => {
+                    <div className="flex-column">
+                        <button type="submit" className="menu-sel border-menu col-xl-3 col-lg-3 col-md-4 col-sm-5 col-5">Register</button> 
+                        <button type="submit" className="menu-notsel border-menu col-xl-3 col-lg-3 col-md-4 col-sm-5 col-5" onClick={() => {
                             setOp("login")
                         }}>Login</button> 
                     </div>
                         
-                    : <div>
-                        <button type="submit" className="menu-notsel border-menu col-3" onClick={() => {
+                    : <div className="flex-column">
+                        <button type="submit" className="menu-notsel border-menu col-xl-3 col-lg-3 col-md-4 col-sm-5 col-5" onClick={() => {
                             setOp("register")
                         }}>Register</button> 
-                        <button className="menu-sel border-menu col-3">Login</button> 
+                        <button className="menu-sel border-menu col-xl-3 col-lg-3 col-md-4 col-sm-5 col-5">Login</button> 
                     </div>
                 }
             </div>
-
             {op === "register" ? <RegisterForm registerH={registerH}/> : <LoginForm login={login}/> }
         </div>
     );

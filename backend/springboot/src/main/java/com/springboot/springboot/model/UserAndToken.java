@@ -9,9 +9,9 @@ public class UserAndToken {
     public UserAndToken() {
     }
 
-    public UserAndToken(String token, User user) {
-        this.token = token;
+    public UserAndToken(User user, String token) {
         this.user = user;
+        this.token = token;
     }
 
     public String getToken() {

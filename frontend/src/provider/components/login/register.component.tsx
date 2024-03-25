@@ -1,4 +1,4 @@
-import { ErrorMessage } from "@hookform/error-message";
+// import { ErrorMessage } from "@hookform/error-message";
 import { useForm } from 'react-hook-form';
 
 interface IFormInputs {
@@ -15,7 +15,7 @@ const RegisterForm = ({ registerH }: any) => {
         formState: { errors },
         handleSubmit,
         getValues,
-        setValue
+        // setValue
     } = useForm<IFormInputs>({
         criteriaMode: "all"
     });
@@ -28,13 +28,13 @@ const RegisterForm = ({ registerH }: any) => {
     return (
         <div className="container mt-3">
             <form onSubmit={handleSubmit(onSubmit)} className="d-flex justify-content-center">
-                <div className="d-flex flex-column col-5 text-start">
+                <div className="d-flex flex-column col-xl-5 col-lg-5 col-md-8 col-10 text-start">
                     <label htmlFor="Email" className="form-label text-dark">Email:
                         <input
                             id="email"
                             className="form-control mt-2"
                             {...register("email", {
-                                required: "required",
+                                required: "Required",
                                 pattern: {
                                     value: /\S+@\S+\.\S+/,
                                     message: "Entered value does not match email format"
@@ -42,14 +42,14 @@ const RegisterForm = ({ registerH }: any) => {
                             })}
                             type="email"
                         />
-                        {errors.email && <span role="alert">{errors.email.message}</span>}
+                        {errors.email && <span role="alert" className="text-danger">{errors.email.message}</span>}
                     </label>
                     <label htmlFor="Username" className="form-label text-dark">Username:
                         <input
                             id="username"
                             className="form-control mt-2"
                             {...register("username", {
-                                required: "required",
+                                required: "Required",
                                 minLength: {
                                     value: 3,
                                     message: "Min length is 3"
@@ -57,14 +57,14 @@ const RegisterForm = ({ registerH }: any) => {
                             })}
                             type="text"
                         />
-                        {errors.username && <span role="alert">{errors.username.message}</span>}
+                        {errors.username && <span role="alert" className="text-danger">{errors.username.message}</span>}
                     </label>
                     <label htmlFor="Password" className="form-label text-dark">Password:
                         <input
                             id="password"
                             className="form-control mt-2"
                             {...register("password", {
-                                required: "required",
+                                required: "Required",
                                 pattern: {
                                     value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/,
                                     message: "Introduce a strong password"
@@ -72,14 +72,14 @@ const RegisterForm = ({ registerH }: any) => {
                             })}
                             type="password"
                         />
-                        {errors.password && <span role="alert">{errors.password.message}</span>}
+                        {errors.password && <span role="alert" className="text-danger">{errors.password.message}</span>}
                     </label>
                     <label htmlFor="RepeatPassword" className="form-label text-dark">Repeat Password:
                         <input
                             id="repeatPassword"
                             className="form-control mt-2"
                             {...register("repeatPassword", {
-                                required: "required",
+                                required: "Required",
                                 validate: (value) => {
                                     const { password } = getValues();
                                     return password === value || "Passwords should match";
@@ -87,7 +87,7 @@ const RegisterForm = ({ registerH }: any) => {
                             })}
                             type="password"
                         />
-                        {errors.repeatPassword && <span role="alert">{errors.repeatPassword.message}</span>}
+                        {errors.repeatPassword && <span role="alert" className="text-danger">{errors.repeatPassword.message}</span>}
                     </label>
                     <button type="submit" className="bpurple mt-4">Register</button>
                 </div>

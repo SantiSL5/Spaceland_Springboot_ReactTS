@@ -64,21 +64,32 @@ export function useUsers() {
             toast.success("User registered successfully, logging in...", { theme: "dark" })
             navigate('/');
             window.location.reload();
-        }).catch(() => {
-            toast.error("Email is already taken", { theme: "dark" })
+        }).catch((res:any) => {
+            console.log(res.response.data);
+            if (res.response.data != null) {
+                toast.error(res.response.data, { theme: "dark" })
+            } else {
+                toast.error("Something went wrong", { theme: "dark" })
+            }
         })
     })
 
     const login = ((data: any) => {
         consume(queryConsumer.apiUser, userQueries.login, data).then((res: any) => {
+            console.log(data);
             setUser(res.data.user);
             setToken(res.data.token);
             consume(queryConsumer.apiJwt, jwtQueries.setToken, res.data.token);
             toast.success("Logging in...", { theme: "dark" })
             navigate('/');
             window.location.reload();
-        }).catch(() => {
-            toast.error("Wrong email or password", { theme: "dark" })
+        }).catch((res:any) => {
+            console.log(res.response.data);
+            if (res.response.data != null) {
+                toast.error(res.response.data, { theme: "dark" })
+            } else {
+                toast.error("Something went wrong", { theme: "dark" })
+            }
         })
     })
 
