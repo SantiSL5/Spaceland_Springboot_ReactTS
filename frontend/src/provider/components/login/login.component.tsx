@@ -24,9 +24,9 @@ const LoginForm = ({ login }: any) => {
     };
 
     return (
-        <div className="mt-3">
+        <div className="containermt-3">
             <form onSubmit={handleSubmit(onSubmit)} className="d-flex justify-content-center">
-                <div className="d-flex flex-column text-start">
+                <div className="d-flex flex-column col-xl-5 col-lg-5 col-md-8 col-10 text-start">
                     <label htmlFor="Email" className="form-label text-dark">Email:
                         <input
                             id="email"

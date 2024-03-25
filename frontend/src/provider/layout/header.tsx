@@ -8,6 +8,7 @@ interface HeaderProps {
 
 const Header = (props: HeaderProps) => {
     const { user, isAdmin, logout } = useUsers();
+    console.log(user);
     return (
         <>
             <nav className="navbar navbar-expand-md navbar-light bg-white">

@@ -7,6 +7,7 @@ import { NoAuthGuard } from "./guards/AuthGuard";
 import Layout from "../layout";
 import Login from "../pages/Login";
 import AdminGuard from "./guards/AdminGuard";
+import AdminUsers from "../pages/Admin/users";
 
 const Router = () => {
     return (
@@ -19,7 +20,8 @@ const Router = () => {
                     </Route>
                     <Route element={<AdminGuard />}>
                         <Route path="/admin/" >
-                            <Route index element={<Admin />} />
+                        <Route index element={<Admin />} />
+                            <Route path="users/" element={<AdminUsers />} />
                         </Route>
                     </Route>
                 </Routes>

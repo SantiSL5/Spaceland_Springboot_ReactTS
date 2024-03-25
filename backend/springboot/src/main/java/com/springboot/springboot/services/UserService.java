@@ -31,6 +31,7 @@ import org.springframework.data.domain.Pageable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -208,13 +209,13 @@ public class UserService {
             if (user == null) return ResponseEntity.badRequest().body("User not found");;
             if (user != null) {
                 if (updatedUser.getUsername() != null ) {
-                    if (userRepository.existsByUsername(updatedUser.getUsername()) > 0) {
+                    if (userRepository.existsByUsername(updatedUser.getUsername()) > 0 && !Objects.equals(user.getUsername(), updatedUser.getUsername())) {
                         return new ResponseEntity<>("Username already taked", HttpStatus.CONFLICT);
                     }
                     user.setUsername(updatedUser.getUsername());
                 }
                 if (updatedUser.getEmail() != null) {
-                    if (userRepository.existsByEmail(updatedUser.getEmail()) > 0) {
+                    if (userRepository.existsByEmail(updatedUser.getEmail()) > 0 && !Objects.equals(user.getEmail(), updatedUser.getEmail())) {
                         return new ResponseEntity<>("Email already taked", HttpStatus.CONFLICT);
                     }
                     user.setEmail(updatedUser.getEmail());
@@ -229,6 +230,7 @@ public class UserService {
                     user.setEnabled(updatedUser.getEnabled());
                 }
                 user.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+                userRepository.save(user);
                 return new ResponseEntity<>(user, HttpStatus.OK);
             }
         } catch (Exception e) {

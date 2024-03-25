@@ -1,3 +1,4 @@
+import { NavLink } from "react-router-dom"
 import "./style.css"
 
 const MenuAdmin = () => {
@@ -10,7 +11,7 @@ const MenuAdmin = () => {
                     </button>
                     <div className="collapse navbar-collapse container-fluid" id="navbarCollapseAdmin">
                         <div className="container-fluid navbar-nav justify-content-evenly">
-                            Admin
+                            <NavLink className={({isActive}) => isActive ? "active col-xl-1 col-lm-1 col-md-3 col-8 nav-item nav-link text-center": "inactive col-xl-1 col-lm-1 col-md-3 col-8 nav-item nav-link text-center" } to="/admin/users">Users</NavLink>
                         </div>
                     </div>
                 </div>
